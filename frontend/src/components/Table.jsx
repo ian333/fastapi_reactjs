@@ -14,6 +14,26 @@ const Table = () => {
     const [activeModal, setActiveModal] = useState(false)
     const [id, setId] = useState(null)
 
+    const handleDelete = async (id) => {
+        const requestOptions = {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+            }
+        };
+
+        const response = await fetch(`/api/leads/${id}`,requestOptions)
+
+        if (!response.ok) {
+            console.log("Something went wrong deleting the lead");
+        }
+        else {
+            getLeads();
+        }
+
+    };
+
     const getLeads = async () => {
         const requestOptions = {
             method: "GET",
@@ -83,8 +103,9 @@ const Table = () => {
                             <td>{moment(lead.date_last_updated).format("Do MMM YY")}</td>
                             <td>
                             <div className="columns">
-                            <button className="button is-primary is-light m-2" onClick={()=> setActiveModal(true) & setId(lead.id)}>Edit</button>
-                            <button className="button is-danger is-light m-2">Delete</button>
+                            <button className="button is-primary is-light m-2" >Edit</button>
+                            <button className="button is-danger is-light m-2" 
+                                    onClick={()=> handleDelete(lead.id)}>Delete</button>
                             </div>
                             </td>
 

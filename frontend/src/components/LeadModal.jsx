@@ -26,7 +26,7 @@ const LeadModal =({active,handleModal,token,id,setErrorMessage})=>{
     const handleUpdateLead = async(e)=>{
         e.preventDefault();
         const requestOptions = {
-            method: "Post",
+            method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + token,
@@ -165,7 +165,9 @@ const LeadModal =({active,handleModal,token,id,setErrorMessage})=>{
                 </section>
                 <footer className="modal-card-foot has-background-primary-light">
                     {id ? (<button 
-                    className="button is-info">
+                    className="button is-info"
+                    onClick={handleUpdateLead}
+                    >
                         Update Lead
                         </button>)
                         :(
