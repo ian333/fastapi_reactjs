@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 
 
@@ -11,6 +12,39 @@ const LeadModal =({active,handleModal,token,id,setErrorMessage})=>{
     const [note,setNote]=useState("")
 
 
+    useEffect(()=> {
+        
+        const getLead = async () => {
+            const requestOptions ={
+                method: "GET",
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: "Bearer " + token,
+            },
+            };
+            
+            const response = await fetch(`/api/leads/${id}`,requestOptions);
+
+            if(!response.ok){
+                setErrorMessage("Could not get the lead");
+            }else{
+
+                const data = await response.json();
+                setFirstName(data.first_name);
+                setLastName(data.last_name);
+                setCompany(data.company);
+                setEmail(data.email);
+                setNote(data.note);
+
+            }
+        };
+
+        if (id){
+            getLead();
+        }
+
+    },[id,token]);
+
     const cleanFormData =()=>{
         setFirstName("");
         setLastName("");
@@ -19,14 +53,11 @@ const LeadModal =({active,handleModal,token,id,setErrorMessage})=>{
         setNote("");
         
     }
-     const updatedFormData =() =>{
-        
-     }
 
     const handleUpdateLead = async(e)=>{
         e.preventDefault();
         const requestOptions = {
-            method: "POST",
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + token,

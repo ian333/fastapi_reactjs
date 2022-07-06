@@ -90,7 +90,7 @@ async def get_lead(
     return await services.get_lead(user=user, db=db, lead_id=lead_id)
 
 
-@app.delete("/api/leads/{lead_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/api/leads/{lead_id}", status_code=status.HTTP_202_ACCEPTED)
 async def delete_lead(
     lead_id: int,
     user: schemas.User = fastapi.Depends(services.get_current_user),
@@ -107,6 +107,7 @@ async def delete_lead(
         _type_: _description_
     """
     await services.delete_lead(user=user, db=db, lead_id=lead_id)
+    return {"message","Succesfully Deleted"}
 
     
 

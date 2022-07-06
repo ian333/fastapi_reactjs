@@ -14,24 +14,26 @@ const Table = () => {
     const [activeModal, setActiveModal] = useState(false)
     const [id, setId] = useState(null)
 
+    const handleUpdate = async(id) => {
+        setId(id);
+        setActiveModal(true)
+    };
+
     const handleDelete = async (id) => {
         const requestOptions = {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
                 Authorization: "Bearer " + token,
-            }
+            },
         };
 
-        const response = await fetch(`/api/leads/${id}`,requestOptions)
+        const response = await fetch(`/api/leads/${id}`,requestOptions);
 
         if (!response.ok) {
-            console.log("Something went wrong deleting the lead");
+            setErrorMessage("Failed to delete the lead");
         }
-        else {
             getLeads();
-        }
-
     };
 
     const getLeads = async () => {
@@ -78,6 +80,7 @@ const Table = () => {
             <ErrorMessage message={errorMessage}/>
             {
                 loaded && leads ? (
+                <div className="table-container">
                 <table className="table is-fullwidth">
                     <thead>
                         <tr>
@@ -103,9 +106,14 @@ const Table = () => {
                             <td>{moment(lead.date_last_updated).format("Do MMM YY")}</td>
                             <td>
                             <div className="columns">
-                            <button className="button is-primary is-light m-2" >Edit</button>
+                            <button className="button is-primary is-light m-2"
+                                    onClick={()=> handleUpdate(lead.id)}>
+                                        Edit
+                                        </button>
                             <button className="button is-danger is-light m-2" 
-                                    onClick={()=> handleDelete(lead.id)}>Delete</button>
+                                    onClick={()=> handleDelete(lead.id)}>
+                                        Delete
+                                        </button>
                             </div>
                             </td>
 
@@ -113,6 +121,7 @@ const Table = () => {
                         }
                     </tbody>
                 </table>
+                </div>
                 ):(
                 <p>Loading</p>
                 )
